@@ -1,0 +1,38 @@
+{
+  "name": "steg",
+  "version": "0.1.5",
+  "description": "Encrypt and hide arbitrary data inside png images",
+  "type": "module",
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "index.d.ts.map",
+    "index.ts"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "node test/index.js"
+  },
+  "keywords": [
+    "steganography",
+    "steg",
+    "lsb",
+    "png",
+    "alpha",
+    "aes",
+    "gcm",
+    "encrypt"
+  ],
+  "author": "Paul Miller (https://paulmillr.com)",
+  "license": "MIT",
+  "dependencies": {
+    "micro-aes-gcm": "0.3.3"
+  },
+  "devDependencies": {
+    "@types/node": "18.0.0",
+    "typescript": "4.7.3",
+    "micro-should": "0.2.0"
+  }
+}

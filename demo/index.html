@@ -1,0 +1,172 @@
+<head>
+  <title>Steg</title>
+</head>
+<style>
+body {
+  font-family: 'Museo Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  max-width: 768px;
+  margin: 0 auto;
+  padding-top: 2rem;
+}
+</style>
+
+<section class="cell post">
+  <h2>steg</h2>
+  <section class="post-content ecc-form">
+    <p>
+      This is demo of <strong>Steg</strong> (<a href="https://github.com/paulmillr/steg">GitHub</a
+      >, <a href="https://npmjs.com/package/steg">npm</a>), steganography library that allows to
+      encrypt and hide arbitrary data inside png images.
+    </p>
+    <ul>
+      <li>Encodes data using least significant bits of PNG pixels.</li>
+      <li>
+        Only PNGs are supported, JPGs cannot be used - every time you save them, they can get
+        re-encoded and some data would be lost, which is a no-go for steganography
+      </li>
+      <li>
+        However, you could feed JPG to the encryption form, and it would be converted to PNG
+      </li>
+      <li>
+        Encrypts hidden data and its metadata with AES-GCM-256 + Scrypt. LSB bitsTaken are not
+        encrypted, so it is slightly easier to understand something is hidden inside .png,
+        however, since we are using encryption + padding, it's not trivial to understand what's
+        exactly is inside.
+      </li>
+      <li>Experimental. Use at your own risk.</li>
+    </ul>
+  </section>
+  <main class="steg-container">
+    <div class="tabs">
+      <input
+        class="radiotab"
+        name="tabs"
+        type="radio"
+        id="tabone"
+        checked="checked"
+      />
+      <label class="label" for="tabone">Encrypt & hide</label>
+      <div class="panel">
+        <h2>Encrypt file and hide it inside image</h2>
+        <form id="steg-encrypt">
+          <p>
+            <input type="file" id="steg-encrypt-image" accept="image/*" />
+            <label for="steg-encrypt-image">Image <small>(jpg, png...)</small></label>
+          </p>
+          <p>
+            <input type="file" id="steg-encrypt-data-file" disabled />
+            <label for="steg-encrypt-data-file"
+              >File to hide inside image <small>(txt, zip...)</small></label
+            >
+          </p>
+          <p>
+            <input
+              type="password"
+              id="steg-encrypt-password"
+              minlength="8"
+              disabled
+              placeholder="Min. 8 chars"
+            />
+            <label for="steg-encrypt-password">Password <small></small></label>
+          </p>
+          <p>
+            <input type="range" id="steg-encrypt-bits-taken" min="1" max="8" value="1" />
+            <label for="steg-encrypt-bits-taken"
+              >Bits taken: <span id="steg-encrypt-bits-taken-value">1</span>
+              <small>(lower is harder to detect)</small></label
+            >
+          </p>
+          <p>
+            <input
+              type="submit"
+              id="steg-encrypt-submit-button"
+              value="Hide data in image"
+              disabled
+            />
+          </p>
+          <hr />
+          <div class="steg-encrypt-output-container">
+            <button id="steg-encrypt-download" hidden>Download</button>
+            <img id="steg-encrypt-output" class="steg-encrypt-output" />
+          </div>
+        </form>
+      </div>
+      <input class="radiotab" name="tabs" type="radio" id="tabtwo" />
+      <label class="label" for="tabtwo">Decrypt & reveal</label>
+      <div class="panel">
+        <h2>Extract file from image and decrypt it</h2>
+        <form id="steg-decrypt">
+          <p>
+            <input type="file" id="steg-decrypt-file" accept="image/png" />
+            <label for="steg-decrypt-file"
+              >Image with hidden data <small>(only .png)</small></label
+            >
+          </p>
+          <p>
+            <input type="password" id="steg-decrypt-password" minlength="8" />
+            <label for="steg-decrypt-password">Password <small></small></label>
+          </p>
+          <p>
+            <input
+              type="submit"
+              id="steg-decrypt-submit"
+              value="Reveal data from image"
+              disabled
+            />
+            <small id="steg-decrypt-status"></small>
+          </p>
+          <div id="steg-decrypt-output-container" hidden>
+            <button id="steg-decrypt-download">Download</button>
+            <span id="steg-decrypt-output-metadata"></span>
+          </div>
+        </form>
+      </div>
+      <input class="radiotab" name="tabs" type="radio" id="tabthree" />
+      <label class="label" for="tabthree">Technicals</label>
+      <div class="panel">
+        <h2>Technical information</h2>
+        <div>
+          <h4>Algorithm</h4>
+          <ol>
+            <li>
+              Calculate the capacity of png image at given `bitsTaken` and save it into `capacity`
+            </li>
+            <li>
+              Create a flat byte array structure with 5 fields ABCDE, that represents file and its
+              metadata:
+              <ul>
+                <li>A `bytes 0..1` name length, 4GB max</li>
+                <li>B `bytes 1..[1+name length]` name, 32 bytes max</li>
+                <li>C `bytes B..B+4` file size length, 4GB max</li>
+                <li>D `bytes C..[C+file length]` file contents</li>
+                <li>
+                  E `bytes D..end` padding filled with zeros - zeros are okay, since we encrypt
+                  them
+                </li>
+              </ul>
+            </li>
+            <li>
+              Encrypt ABCDE under given AES key with AES-GCM-256.
+              <ul>
+                <li>IV `bytes 0..12` taken from CSPRNG</li>
+                <li>ciphertext `bytes 12..(end-16)` encrypted ABCD</li>
+                <li>auth tag `bytes end-16..end` GCM authentication tag</li>
+              </ul>
+            </li>
+          </ol>
+          <h4>The web app</h4>
+          <ul>
+            <li>
+              We're using Scrypt; with <code>N=2^19, r=8, p=1</code> and
+              <code>salt="steg-file"</code>
+            </li>
+            <li>If CSPRNG is not available, the app would crash</li>
+            <li>AES GCM Authentication Tag is calculated and verified properly</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </main>
+</section>
+<link rel="stylesheet" href="steg5k.css" />
+<script src="steg5k.js"></script>

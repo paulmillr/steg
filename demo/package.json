@@ -1,0 +1,17 @@
+{
+  "name": "steg-demo",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "rollup -c rollup.config.js"
+  },
+  "dependencies": {
+    "@noble/hashes": "1.1.2",
+    "steg": "0.1.5"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "22.0.0",
+    "@rollup/plugin-node-resolve": "13.3.0",
+    "rollup": "2.75.5"
+  }
+}

@@ -1,0 +1,115 @@
+      .steg-container * {
+        box-sizing: border-box;
+      }
+      /* .steg-container {
+        max-width: 768px;
+        margin: 0 auto;
+      } */
+
+      .steg-container input {
+        box-sizing: border-box;
+        width: 180px;
+        margin-right: 2rem;
+      }
+
+      .steg-container input[type='range'] {
+        width: 178px;
+      }
+      .steg-encrypt-output {
+        max-width: 100%;
+      }
+
+      *:focus,
+      input:focus + label {
+        outline: none;
+        box-shadow: inset 0 0 0 5px lightBlue;
+      }
+
+      /* main.steg-container {
+        max-width: 801px;
+        margin: auto;
+      } */
+
+      .steg-container h1 {
+        text-align: center;
+        margin-top: 0;
+      }
+
+      h2 {
+        margin: 0 0 12px;
+      }
+
+      p {
+        margin: 0 0 20px;
+        /* font-size: 20px; */
+        line-height: 1.5;
+      }
+
+      .tabs {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 auto 20px;
+        border-radius: 10px 10px 0 0;
+      }
+
+      .radiotab {
+        position: absolute;
+        opacity: 0;
+      }
+
+      .label {
+        width: 100%;
+        padding: 22px 20px;
+        /* background: #e5e5e5; */
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 23px;
+        color: #7f7f7f;
+        transition: background 0.3s, color 0.3s;
+        border: none;
+        border-radius: 0;
+        text-align: center;
+      }
+
+      .label:hover {
+        background: #d8d8d8;
+      }
+
+      .label:active {
+        background: #ccc;
+      }
+
+      .radiotab:checked + .label {
+        background: #fff;
+        color: #000;
+        border-top: solid 2px #000;
+        border-left: solid 2px #000;
+        border-right: solid 2px #000;
+        border-bottom: none;
+      }
+
+      .panel {
+        display: none;
+        padding: 20px 30px 30px;
+        /* background: #fff; */
+        width: 100%;
+        border-left: solid 2px #000;
+        border-bottom: solid 2px #000;
+        border-right: solid 2px #000;
+      }
+
+      .radiotab:checked + .label + .panel {
+        display: block;
+      }
+
+      @media (min-width: 600px) {
+        .panel {
+          order: 99;
+        }
+
+        .label {
+          width: 33.33%;
+          border-radius: 10px 10px 0 0;
+          border-bottom: solid 2px #000;
+        }
+      }
