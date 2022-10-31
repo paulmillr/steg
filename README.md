@@ -34,7 +34,7 @@ AES output in order to thwart detection.
 Can be only used inside browsers. node.js usage with `node-canvas` that polyfills Canvas API is possible,
 but had not been tested.
 
-Check out demo inside `demo` directory, or at https://paulmillr.com/demos/steg/.
+Check out demo inside `demo` directory, or at https://paulmillr.com/demos/steg/. There is also a 3rd party demo related to Decentralized Identifiers available at https://github.com/OR13/didme.me.
 
 ### Hide a text file
 
